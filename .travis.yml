@@ -38,16 +38,21 @@ jobs:
     - stage: End-to-end tests
       name: "e2e tests in Google Cloud (GKE)"
       if: type = cron OR tag IS present
-      env: CLUSTER_PROVIDER="gke" CLUSTER_REUSE=1
+      env:
+        - CLUSTER_PROVIDER="gke"
+        - CLUSTER_REUSE=1
       script: make ci/cluster-setup ci/e2e
 
     - name: "e2e tests in Azure (AKS)"
       if: type = cron OR tag IS present
-      env: CLUSTER_PROVIDER="azure" CLUSTER_REUSE=1
+      env:
+        - CLUSTER_PROVIDER="azure"
+        - CLUSTER_REUSE=1
       script: make ci/cluster-setup ci/e2e
 
     - name: "e2e tests in a local (1 node) Kubernetes cluster (k3d)"
-      env: CLUSTER_PROVIDER="k3d"
+      env:
+        - CLUSTER_PROVIDER="k3d"
       script: make ci/cluster-setup ci/e2e
 
     # stage 3: publish artifacts
@@ -85,8 +90,6 @@ jobs:
           script: make ci/publish-image
           skip_cleanup: true
         # publish the image to Azure
-        # NOTE: make sure DOCKER_USERNAME/DOCKER_PASSWORD have values for a bot
-        #       (from https://quay.io/repository/datawire/ambassador-operator?tab=settings)
         - provider: script
           on:
             all_branches: true
